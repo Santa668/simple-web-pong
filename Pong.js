@@ -86,7 +86,7 @@ function updateBall() {
   ball.x += ball.dx;
   ball.y += ball.dy;
 }
-/*
+
 // Set up touch events
 canvas.addEventListener("touchstart", handleTouchStart, false);
 canvas.addEventListener("touchmove", handleTouchMove, false);
@@ -121,7 +121,6 @@ canvas.addEventListener("touchend", function(evt) {
   rightPaddle.dy = 0;
 }, false);
 
-*/
 function startGame() {
   alert("startGame called");
   // Set initial positions of ball and paddles
