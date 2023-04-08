@@ -30,6 +30,7 @@ var rightPaddle = {
 
 // Draw the ball
 function drawBall() {
+  alert("drawBall");
   ctx.beginPath();
   ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
   ctx.fillStyle = "white";
@@ -39,6 +40,7 @@ function drawBall() {
 
 // Draw the paddles
 function drawPaddles() {
+  alert("drawPaddles");
   ctx.fillStyle = "white";
   ctx.fillRect(leftPaddle.x, leftPaddle.y, paddleWidth, paddleHeight);
   ctx.fillRect(rightPaddle.x, rightPaddle.y, paddleWidth, paddleHeight);
@@ -46,6 +48,7 @@ function drawPaddles() {
 
 // Move the paddles
 function movePaddles() {
+  alert("movePaddles");
   leftPaddle.y += leftPaddle.dy;
   rightPaddle.y += rightPaddle.dy;
 
@@ -121,7 +124,7 @@ canvas.addEventListener("touchend", function(evt) {
 
 
 function startGame() {
-  console.log("startGame called");
+  alert("startGame called");
   // Set initial positions of ball and paddles
   ball.x = canvas.width / 2;
   ball.y = canvas.height / 2;
@@ -148,8 +151,10 @@ function startGame() {
 
     // Request next animation frame
     requestAnimationFrame(animate);
+    
   }
 
   // Start animation loop
   animate();
+  alert("end startGame");
 }
