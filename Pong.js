@@ -32,7 +32,6 @@ var rightPaddle = {
 
 // Draw the ball
 function drawBall() {
-  alert("drawBall");
   ctx.beginPath();
   ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
   ctx.fillStyle = "white";
@@ -42,7 +41,6 @@ function drawBall() {
 
 // Draw the paddles
 function drawPaddles() {
-  alert("drawPaddles");
   ctx.fillStyle = "white";
   ctx.fillRect(leftPaddle.x, leftPaddle.y, paddleWidth, paddleHeight);
   ctx.fillRect(rightPaddle.x, rightPaddle.y, paddleWidth, paddleHeight);
@@ -50,7 +48,6 @@ function drawPaddles() {
 
 // Move the paddles
 function movePaddles() {
-  alert("movePaddles");
   leftPaddle.y += leftPaddle.dy;
   rightPaddle.y += rightPaddle.dy;
 
@@ -158,5 +155,4 @@ function startGame() {
 
   // Start animation loop
   animate();
-  alert("end startGame");
 }
