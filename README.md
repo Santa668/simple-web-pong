@@ -4,4 +4,4 @@ testing building a web game using ChatGPT 3.5. Note: First attempt failed, and u
 
 https://simple-web-pong.vercel.app/
 
-
+test.html and test.js contain a copy from someone else's code which I was comparing with. TO DELETE.
