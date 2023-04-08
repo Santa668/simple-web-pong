@@ -3,6 +3,13 @@ alert("pong.js called");
 // Set up the canvas
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+var x = canvas.width/2;
+var y = canvas.height-30;
+var dx = 4;
+var dy = -4;
+
+var leftScore = 0;
+var rightScore = 0;
 
 // Set up the ball
 var ball = {
@@ -39,11 +46,21 @@ function drawBall() {
   ctx.closePath();
 }
 
+function drawScores() {
+  ctx.font = "80px Arial";
+  ctx.fillStyle = "white";
+  ctx.fillText(leftScore, (canvas.width / 2) - 80, 80);
+  ctx.fillText(rightScore, (canvas.width / 2) + 40, 80);
+}
+
 // Draw the paddles
 function drawPaddles() {
+  ctx.beginPath();
   ctx.fillStyle = "white";
   ctx.fillRect(leftPaddle.x, leftPaddle.y, paddleWidth, paddleHeight);
   ctx.fillRect(rightPaddle.x, rightPaddle.y, paddleWidth, paddleHeight);
+  ctx.fill;
+  ctx.closePath;
 }
 
 // Move the paddles
@@ -137,6 +154,7 @@ function startGame() {
     // Draw ball and paddles
     drawBall();
     drawPaddles();
+    drawScores();
 
     // Move paddles
     movePaddles();
