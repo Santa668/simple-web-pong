@@ -1,5 +1,7 @@
 # simple-web-pong
 
-testing building a web game using ChatGPT 3.5. All done entirely online in github and published to Pages.
+testing building a web game using ChatGPT 3.5. Note: First attempt failed, and unclear what was wrong with the code. Then loaded ChatBotUI in vercel and tried again and this was successful. 
 
-https://santa668.github.io/simple-web-pong/
+https://simple-web-pong.vercel.app/
+
+
