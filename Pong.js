@@ -121,6 +121,7 @@ canvas.addEventListener("touchend", function(evt) {
 
 
 function startGame() {
+  console.log("startGame called");
   // Set initial positions of ball and paddles
   ball.x = canvas.width / 2;
   ball.y = canvas.height / 2;
