@@ -1,177 +1,228 @@
-alert("pong.js called");
+//initializing variables
+var canvas = document.getElementById("pongCanvas");
+var context = canvas.getContext("2d");
+var player1Score = 0;
+var player2Score = 0;
+var leftArrowPressed = false;
+var rightArrowPressed = false;
+var paddleSpeed = 10;
+var ballSpeed = 15
 
-// Set up the canvas
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
-var x = canvas.width/2;
-var y = canvas.height-30;
-var dx = 4;
-var dy = -4;
+// add event listeners to update ballSpeed and paddleSpeed variables
+var ballSpeedInput = document.getElementById("ball-speed");
+var paddleSpeedInput = document.getElementById("paddle-speed");
 
-var leftScore = 0;
-var rightScore = 0;
+ballSpeedInput.addEventListener("change", function() {
+  ballSpeed = parseInt(ballSpeedInput.value);
+});
 
-// Set up the ball
-var ball = {
-  x: canvas.width / 2,
-  y: canvas.height / 2,
-  radius: 10,
-  speed: 5,
-  dx: 5,
-  dy: -5
-};
+paddleSpeedInput.addEventListener("change", function() {
+  paddleSpeed = parseInt(paddleSpeedInput.value);
+});
 
-// Set up the paddles
-var paddleHeight = 100;
-var paddleWidth = 10;
+
 var leftPaddle = {
-  x: 0,
-  y: canvas.height / 2 - paddleHeight / 2,
-  speed: 5,
-  dy: 0
+    x: 10,
+    y: canvas.height / 2 - 50,
+    width: 10,
+    height: 100
 };
 var rightPaddle = {
-  x: canvas.width - paddleWidth,
-  y: canvas.height / 2 - paddleHeight / 2,
-  speed: 5,
-  dy: 0
+    x: canvas.width - 20,
+    y: canvas.height / 2 - 50,
+    width: 10,
+    height: 100
+};
+var ball = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    radius: 10,
+    velocityX: ballSpeed, // Initial velocity along X-axis
+    velocityY: ballSpeed, // Initial velocity along Y-axis
 };
 
-// Draw the ball
-function drawBall() {
-  ctx.beginPath();
-  ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-  ctx.fillStyle = "white";
-  ctx.fill();
-  ctx.closePath();
+
+//drawing paddles and ball on the canvas
+function draw(){
+
+    //clearing the previous ball and paddles on the canvas
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    //drawing left paddle
+    context.fillStyle = "#ff0";
+    context.fillRect(leftPaddle.x, leftPaddle.y, leftPaddle.width, leftPaddle.height);
+
+    //drawing right paddle
+    context.fillStyle = "#f0f";
+    context.fillRect(rightPaddle.x, rightPaddle.y, rightPaddle.width, rightPaddle.height);
+
+    //drawing ball
+    context.beginPath();
+    context.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    context.fillStyle = "#00f";
+    context.fill();
+
+    //updating the score counter
+    context.font = "30px Arial";
+    context.fillStyle = "#f00";
+    context.fillText("Player1: " + player1Score, canvas.width * 0.25, 50);
+    context.fillText("Player2: " + player2Score, canvas.width * 0.75, 50);
 }
 
-function drawScores() {
-  ctx.font = "80px Arial";
-  ctx.fillStyle = "white";
-  ctx.fillText(leftScore, (canvas.width / 2) - 80, 80);
-  ctx.fillText(rightScore, (canvas.width / 2) + 40, 80);
-}
+//auto-moving paddles and ball
+function move(){
 
-// Draw the paddles
-function drawPaddles() {
-  ctx.beginPath();
-  ctx.fillStyle = "white";
-  ctx.fillRect(leftPaddle.x, leftPaddle.y, paddleWidth, paddleHeight);
-  ctx.fillRect(rightPaddle.x, rightPaddle.y, paddleWidth, paddleHeight);
-  ctx.fill;
-  ctx.closePath;
-}
-
-// Move the paddles
-function movePaddles() {
-  leftPaddle.y += leftPaddle.dy;
-  rightPaddle.y += rightPaddle.dy;
-
-  if (leftPaddle.y < 0) {
-    leftPaddle.y = 0;
-  } else if (leftPaddle.y + paddleHeight > canvas.height) {
-    leftPaddle.y = canvas.height - paddleHeight;
-  }
-
-  if (rightPaddle.y < 0) {
-    rightPaddle.y = 0;
-  } else if (rightPaddle.y + paddleHeight > canvas.height) {
-    rightPaddle.y = canvas.height - paddleHeight;
-  }
-}
-
-// Detect collisions with the paddles
-function detectCollisions() {
-  if (
-    ball.x - ball.radius < leftPaddle.x + paddleWidth &&
-    ball.y + ball.radius > leftPaddle.y &&
-    ball.y - ball.radius < leftPaddle.y + paddleHeight
-  ) {
-    ball.dx = -ball.dx;
-  } else if (
-    ball.x + ball.radius > rightPaddle.x &&
-    ball.y + ball.radius > rightPaddle.y &&
-    ball.y - ball.radius < rightPaddle.y + paddleHeight
-  ) {
-    ball.dx = -ball.dx;
-  }
-}
-
-// Update the ball position
-function updateBall() {
-  ball.x += ball.dx;
-  ball.y += ball.dy;
-}
-
-// Set up touch events
-canvas.addEventListener("touchstart", handleTouchStart, false);
-canvas.addEventListener("touchmove", handleTouchMove, false);
-
-// Handle touch start event
-function handleTouchStart(evt) {
-  if (evt.touches.length == 1) {
-    var touch = evt.touches[0];
-    if (touch.pageX < canvas.width / 2) {
-      leftPaddle.dy = -leftPaddle.speed;
-    } else {
-      rightPaddle.dy = -rightPaddle.speed;
+    //moving left paddle, using arrow keys
+    if (leftArrowPressed && leftPaddle.y > 0) {  
+        leftPaddle.y -= paddleSpeed;
+    } else if (rightArrowPressed && leftPaddle.y < canvas.height - 
+     leftPaddle.height) {
+        leftPaddle.y += paddleSpeed;
     }
-  }
+
+    //moving right paddle automatically
+        if (ball.y > rightPaddle.y + rightPaddle.height / 2) {
+            rightPaddle.y += paddleSpeed;
+        } else if (ball.y < rightPaddle.y + rightPaddle.height / 2) {
+            rightPaddle.y -= paddleSpeed;
+        }
+
+    //moving ball
+    ball.x += ball.velocityX;
+    ball.y += ball.velocityY;
 }
 
-// Handle touch move event
-function handleTouchMove(evt) {
-  if (evt.touches.length == 1) {
-    var touch = evt.touches[0];
-    if (touch.pageX < canvas.width / 2) {
-      leftPaddle.dy = touch.pageY - (leftPaddle.y + paddleHeight / 2);
-    } else {
-      rightPaddle.dy = touch.pageY - (rightPaddle.y + paddleHeight / 2);
+// resets ball's position and velocity after a goal is scored
+function resetBall() {
+    ball.x = canvas.width / 2;
+    ball.y = canvas.height / 2;
+    ball.velocityX = -ball.velocityX;
+    ball.velocityY = 5;
+}
+
+//controlling left paddle using keyboard arrow keys
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+
+
+function keyDownHandler(event) {
+    if (event.keyCode == 38) {
+        leftArrowPressed = true;
+    } else if (event.keyCode == 40) {
+        rightArrowPressed = true;
     }
-  }
 }
 
-// Reset paddle direction on touch end event
-canvas.addEventListener("touchend", function(evt) {
-  leftPaddle.dy = 0;
-  rightPaddle.dy = 0;
-}, false);
+function keyUpHandler(event) {
+    if (event.keyCode == 38) {
+        leftArrowPressed = false;
+    } else if (event.keyCode == 40) {
+        rightArrowPressed = false;
+    }
+}
 
-function startGame() {
-  alert("startGame called");
-  // Set initial positions of ball and paddles
-  ball.x = canvas.width / 2;
-  ball.y = canvas.height / 2;
-  leftPaddle.y = canvas.height / 2 - paddleHeight / 2;
-  rightPaddle.y = canvas.height / 2 - paddleHeight / 2;
+//controlling left paddle using touch event
+canvas.addEventListener("touchmove", touchMoveHandler, false);
 
-  // Start animation loop
-  function animate() {
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+function touchMoveHandler(event) {
+    var touchYPos = event.touches[0].clientY - canvas.offsetTop;
+    if (touchYPos > leftPaddle.y + leftPaddle.height / 2) {
+        leftPaddle.y += paddleSpeed;
+    } else if (touchYPos < leftPaddle.y + leftPaddle.height / 2) {
+        leftPaddle.y -= paddleSpeed;
+    }
+}
 
-    // Draw ball and paddles
-    drawBall();
-    drawPaddles();
-    drawScores();
+// moving paddles and ball
+function move() {
 
-    // Move paddles
-    movePaddles();
+    // moving left paddle using arrow keys
+    if (leftArrowPressed && leftPaddle.y > 0) {
+        leftPaddle.y -= paddleSpeed;
+    } else if (rightArrowPressed && leftPaddle.y < canvas.height - leftPaddle.height) {
+        leftPaddle.y += paddleSpeed;
+    }
 
-    // Detect collisions
-    detectCollisions();
+    // moving right paddle automatically based on the position of the ball
+    if (ball.y > rightPaddle.y + rightPaddle.height / 2) {
+        rightPaddle.y += paddleSpeed;
+    } else if (ball.y < rightPaddle.y + rightPaddle.height / 2) {
+        rightPaddle.y -= paddleSpeed;
+    }
 
-    // Update ball position
-    updateBall();
+    // moving ball
+    ball.x += ball.velocityX;
+    ball.y += ball.velocityY;
+}
 
-    // Request next animation frame
-    requestAnimationFrame(animate);
+//collision detection, and updating scores
+function collisionDetection(){
     
-  }
+    //detecting collision with left paddle
+    if (ball.x - ball.radius < leftPaddle.x + leftPaddle.width 
+    && ball.y > leftPaddle.y && ball.y < leftPaddle.y + leftPaddle.height) {
+        ball.velocityX = -ball.velocityX;
+        ball.velocityY += (leftPaddle.y + leftPaddle.height/2 - ball.y) * 0.02; 
+    }
 
-  // Start animation loop
-  animate();
+    //detecting collision with right paddle
+    if (ball.x + ball.radius > rightPaddle.x && ball.y > rightPaddle.y 
+    && ball.y < rightPaddle.y + rightPaddle.height) {
+        ball.velocityX = -ball.velocityX;
+        ball.velocityY += (rightPaddle.y + rightPaddle.height/2 - ball.y) * 0.02;
+    }
+
+    //detecting screen edge collision and updating scores
+    if (ball.x - ball.radius < 0) {
+        player2Score++;
+        resetBall();
+    } else if (ball.x + ball.radius > canvas.width) {
+        player1Score++;
+        resetBall();
+    }
+
+    if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
+        ball.velocityY = -ball.velocityY;
+    }
 }
 
-alert("pong.js loaded");
+// reset game function to allow users to start again
+function resetGame() {
+
+    // reset player scores
+    player1Score = 0;
+    player2Score = 0;
+
+    // reset paddle and ball positions
+    leftPaddle.x = 10;
+    leftPaddle.y = canvas.height / 2 - 50;
+    rightPaddle.x = canvas.width - 20;
+    rightPaddle.y = canvas.height / 2 - 50;
+    ball.x = canvas.width / 2;
+    ball.y = canvas.height / 2;
+
+    // choose a random direction for the ball's initial velocity
+    var randomDirection = Math.round(Math.random()) * 2 - 1;
+    ball.velocityX = 5 * randomDirection;
+    ball.velocityY = 5;
+}
+
+
+//game loop function
+function gameLoop(){
+
+    //moving the paddles and ball
+    move();
+
+    //drawing the paddles, ball, and updating the score counter
+    draw();
+
+    //checking for collisions and updating scores
+    collisionDetection();
+
+    //requesting to run the function again
+    requestAnimationFrame(gameLoop);
+}
+
+//starting the game loop
+gameLoop();

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8" />
     <title>Pong</title>
     <style>
       canvas {
@@ -12,9 +13,17 @@
     </style>
   </head>
   <body>
-    <canvas id="canvas" width="1024" height="720"></canvas>
-    <button onclick="startGame()">Start Game</button>
+    <canvas id="pongCanvas" width="800" height="600" style="border:2px solid black"></canvas>
+    <button onclick="resetGame()">Restart Game</button>
+    <div>
+        <label for="ball-speed">Ball Speed:</label>
+        <input type="number" id="ball-speed" value="5" min="1" max="20">
+      </div>
+      
+      <div>
+        <label for="paddle-speed">Paddle Speed:</label>
+        <input type="number" id="paddle-speed" value="5" min="1" max="20">
+      </div>
     <script src="pong.js"></script>
-
   </body>
 </html>
