@@ -13,7 +13,7 @@ var ball = {
   dx: 5,
   dy: -5
 };
-
+/*
 // Set up the paddles
 var paddleHeight = 100;
 var paddleWidth = 10;
@@ -156,3 +156,5 @@ function startGame() {
   // Start animation loop
   animate();
 }
+*/
+alert("pong.js loaded");
