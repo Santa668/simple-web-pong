@@ -82,3 +82,39 @@ function detectCollisions() {
 // Update the ball position
 function updateBall() {
   ball.x += ball
+  
+  
+// Set up touch events
+canvas.addEventListener("touchstart", handleTouchStart, false);
+canvas.addEventListener("touchmove", handleTouchMove, false);
+
+// Handle touch start event
+function handleTouchStart(evt) {
+  if (evt.touches.length == 1) {
+    var touch = evt.touches[0];
+    if (touch.pageX < canvas.width / 2) {
+      leftPaddle.dy = -leftPaddle.speed;
+    } else {
+      rightPaddle.dy = -rightPaddle.speed;
+    }
+  }
+}
+
+// Handle touch move event
+function handleTouchMove(evt) {
+  if (evt.touches.length == 1) {
+    var touch = evt.touches[0];
+    if (touch.pageX < canvas.width / 2) {
+      leftPaddle.dy = touch.pageY - (leftPaddle.y + paddleHeight / 2);
+    } else {
+      rightPaddle.dy = touch.pageY - (rightPaddle.y + paddleHeight / 2);
+    }
+  }
+}
+
+// Reset paddle direction on touch end event
+canvas.addEventListener("touchend", function(evt) {
+  leftPaddle.dy = 0;
+  rightPaddle.dy = 0;
+}, false);
+
